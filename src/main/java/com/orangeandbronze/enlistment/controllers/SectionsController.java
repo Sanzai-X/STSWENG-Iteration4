@@ -26,6 +26,8 @@ class SectionsController {
     private RoomRepository roomRepo;
     @Autowired
     private SectionRepository sectionRepo;
+    @Autowired
+    private FacultyRepository facultyRepo;
 
 
     public SectionsController(SubjectRepository subjectRepo, AdminRepository adminRepo, RoomRepository roomRepo, SectionRepository sectionRepo) {
@@ -49,16 +51,18 @@ class SectionsController {
         model.addAttribute("subjects", subjectRepo.findAll());
         model.addAttribute("rooms", roomRepo.findAll());
         model.addAttribute("sections", sectionRepo.findAll());
+        model.addAttribute("faculty", facultyRepo.findAll());
         return "sections";
     }
 
     @PostMapping
-    public String createSection(String sectionId, String subjectId, Days days, String roomId, String startTime, String endTime, RedirectAttributes redirectAttributes) {
+    public String createSection(String sectionId, String subjectId, Days days, String roomId, String startTime, String endTime, int facultyID,RedirectAttributes redirectAttributes) {
         Room room = roomRepo.findById(roomId).orElseThrow(() -> new IllegalArgumentException("Room not found"));
         Subject subject = subjectRepo.findById(subjectId).orElseThrow(() -> new IllegalArgumentException("Subject not found"));
         Period period = new Period(LocalTime.parse(startTime), LocalTime.parse(endTime));
         Schedule schedule = new Schedule(days, period);
         Section section = new Section(sectionId, subject, schedule, room);
+        Faculty faculty = facultyRepo.findById(facultyID).orElseThrow(() -> new IllegalArgumentException("Faculty not found"));
         sectionRepo.save(section);
         redirectAttributes.addFlashAttribute("sectionSuccessMessage", "Successfully created new section " + sectionId);
         return "redirect:sections";

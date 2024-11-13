@@ -41,6 +41,7 @@ class SectionsControllerTest {
         Days days = MTH;
         String startTime = "09:00";
         String endTime = "10:30";
+        int facultyID = 0;
 
 
         Room room = mock(Room.class);
@@ -55,7 +56,7 @@ class SectionsControllerTest {
         ArgumentCaptor<Section> sectionCaptor = ArgumentCaptor.forClass(Section.class);
 
         // When
-        String result = sectionsController.createSection(sectionId, subjectId, days, roomId, startTime, endTime, redirectAttributes);
+        String result = sectionsController.createSection(sectionId, subjectId, days, roomId, startTime, endTime, facultyID,redirectAttributes);
 
         // Then
         verify(sectionRepo).save(sectionCaptor.capture());

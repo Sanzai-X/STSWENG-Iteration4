@@ -4,6 +4,8 @@ import org.hibernate.annotations.*;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.*;
 import java.util.concurrent.locks.*;
 
@@ -16,12 +18,17 @@ public class Section {
     private final String sectionId;
     @ManyToOne
     private final Subject subject;
+    @ManyToOne
+    private Faculty faculty = null;
     @Embedded
     private final Schedule schedule;
     @ManyToOne
     private final Room room;
 
     private int numberOfStudents = 0;
+
+    @Autowired
+    private SectionRepository sectionRepository;
 
     @Version
     @ColumnDefault("0")
@@ -80,6 +87,26 @@ public class Section {
         notNull(subjectsTaken, "subjectsTaken can't be null");
         Collection<Subject> copy = new HashSet<>(subjectsTaken); // sets are quicker to search through
         subject.checkPrereqs(copy);
+    }
+
+    boolean checkSchedule(Faculty faculty){
+        List<Section> sectionList = sectionRepository.findAll();
+
+        for (Section section : sectionList) {
+            if (section.getSchedule() == this.schedule && section.checkFaculty(this.faculty)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean checkFaculty(Faculty faculty){
+        return this.faculty == faculty;
+    }
+
+    public void assignFaculty(Faculty faculty){
+        isTrue(!checkSchedule(faculty), "Faculty has conflicting schedule");
+        this.faculty = faculty;
     }
 
     /** Locks this object's ReentrantLock **/
