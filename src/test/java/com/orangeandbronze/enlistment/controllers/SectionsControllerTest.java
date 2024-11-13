@@ -45,7 +45,7 @@ class SectionsControllerTest {
         Days days = MTH;
         String startTime = "09:00";
         String endTime = "10:30";
-        int facultyID = 0;
+        int facultyID = -1;
 
 
         Room room = mock(Room.class);

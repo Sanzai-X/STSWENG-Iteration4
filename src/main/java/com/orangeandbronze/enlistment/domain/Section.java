@@ -135,6 +135,15 @@ public class Section {
         return room;
     }
 
+    public int getFacultyID() {
+        if (faculty == null){
+            return -1;
+        } else{
+            return faculty.getFacultyNumber();
+        }
+
+    }
+
     @Override
     public String toString() {
         return sectionId;

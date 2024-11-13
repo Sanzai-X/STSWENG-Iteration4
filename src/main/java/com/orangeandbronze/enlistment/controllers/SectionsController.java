@@ -63,7 +63,11 @@ class SectionsController {
         Period period = new Period(LocalTime.parse(startTime), LocalTime.parse(endTime));
         Schedule schedule = new Schedule(days, period);
         Section section = new Section(sectionId, subject, schedule, room);
-        Faculty faculty = facultyRepo.findById(facultyID).orElseThrow(() -> new IllegalArgumentException("Faculty not found"));
+        if(facultyID != -1){
+            Faculty faculty = facultyRepo.findById(facultyID).orElseThrow(() -> new IllegalArgumentException("Faculty not found"));
+            section.assignFaculty(faculty);
+        }
+
         sectionRepo.save(section);
         redirectAttributes.addFlashAttribute("sectionSuccessMessage", "Successfully created new section " + sectionId);
         return "redirect:sections";
