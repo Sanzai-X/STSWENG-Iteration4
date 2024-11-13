@@ -1,0 +1,190 @@
+<!-- Start Header -->
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <link href="favicon.ico" rel="shortcut icon"/>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet"/>
+</head>
+<!-- End Header -->
+
+<title>Create Section</title>
+<div class="container-fluid">
+    <h1>Create Section</h1>
+    <h3>
+        <h1>
+            Logged in as <span th:text="${admin.firstname}">Calen</span> <span
+                th:text="${admin.lastname}">Legaspi</span>, Admin ID#<span
+                th:text="${admin.id}">1000</span> <a href="login.html">Logout</a>
+        </h1>
+
+    </h3>
+
+    <div class="row">
+        <div class="col-md-12"
+             style="border-style: solid; border-radius: 25px">
+            <form action="sections" id="new_section" method="post"
+                  name="new_section">
+                <div style="font-weight: bold; font-size: 200%; margin: 1%">
+
+                    <div class="alert alert-danger" th:if="${sectionExceptionMessage}">
+                        <h2 th:text="${sectionExceptionMessage}">Error message goes
+                            here.</h2>
+                    </div>
+                    <div class="alert alert-success" th:if="${sectionSuccessMessage}">
+                        <h2 th:text="${sectionSuccessMessage}">Success message goes
+                            here.</h2>
+                    </div>
+                    Section ID: <input id="sectionId" name="sectionId" style="font-weight: bold; font-size: 120%; margin: 1%; width: 300px"
+                                       type="text">
+                </div>
+                <div class="container-fluid" id="choices" style="padding: 10px">
+                    <div class="col-md-12 row">
+                        <div class="col-md-2" id="subjects"
+                             style="margin-right: 10px; border-style: solid; border-color: gray; border-radius: 25px; padding: 1%">
+                            <h2>Subjects</h2>
+                            <div class="radio" th:each="subject : ${subjects}">
+                                <label> <input form="new_section" name="subjectId"
+                                               th:id="${subject}" th:text="${subject}" th:value="${subject}"
+                                               type="radio">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3" id="rooms"
+                             style="margin-right: 10px; border-style: solid; border-color: gray; border-radius: 25px; padding: 1%">
+                            <h2>Rooms</h2>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th></th>
+                                    <th>Room Name</th>
+                                    <th>Capacity</th>
+                                </tr>
+                                <tr th:each="room : ${rooms}">
+                                    <td><input form="new_section" name="roomName"
+                                               th:value="${room.name}" type="radio"></td>
+                                    <td th:text="${room.name}">Melchor Hall</td>
+                                    <td align="center" th:text="${room.capacity}">1000</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-3" id="instructors"
+                             style="margin-right: 10px; border-style: solid; border-color: gray; border-radius: 25px; padding: 1%">
+                            <h2>Instructors</h2>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th></th>
+                                    <th>Faculty #</th>
+                                </tr>
+                                <tr th:each="instructor : ${instructors}">
+                                    <td><input form="new_section" name="facultyNumber"
+                                               th:value="${instructor.facultyNumber}" type="radio"></td>
+                                    <td th:text="${instructor.facultyNumber}">1234</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row" id="schedule"
+                                 style="border-style: solid; border-color: gray; border-radius: 25px; padding: 10px">
+                                <h2>Schedule</h2>
+                                <div class="col-md-4">
+                                    <h5>Days</h5>
+                                    <select class="form-select" name="days">
+                                        <option value="MTH">MTH</option>
+                                        <option value="TF">TF</option>
+                                        <option value="WS">WS</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h5>Start Time</h5>
+                                    <select class="form-select" name="start">
+                                        <option value="08:30">8:30AM</option>
+                                        <option value="09:00">9:00AM</option>
+                                        <option value="09:30">9:30AM</option>
+                                        <option value="10:00">10:00AM</option>
+                                        <option value="10:30">10:30AM</option>
+                                        <option value="11:00">11:00AM</option>
+                                        <option value="11:30">11:30AM</option>
+                                        <option value="12:00">12:00PM</option>
+                                        <option value="12:30">12:30PM</option>
+                                        <option value="13:00">1:00PM</option>
+                                        <option value="13:30">1:30PM</option>
+                                        <option value="14:00">2:00PM</option>
+                                        <option value="14:30">2:30PM</option>
+                                        <option value="15:00">3:00PM</option>
+                                        <option value="15:30">3:30PM</option>
+                                        <option value="16:00">4:00PM</option>
+                                        <option value="16:30">4:30PM</option>
+                                        <option value="17:00">5:00PM</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <h5>End Time</h5>
+                                    <select class="form-select" name="end">
+                                        <option value="09:00">9:00AM</option>
+                                        <option value="09:30">9:30AM</option>
+                                        <option value="10:00">10:00AM</option>
+                                        <option value="10:30">10:30AM</option>
+                                        <option value="11:00">11:00AM</option>
+                                        <option value="11:30">11:30AM</option>
+                                        <option value="12:00">12:00PM</option>
+                                        <option value="12:30">12:30PM</option>
+                                        <option value="13:00">1:00PM</option>
+                                        <option value="13:30">1:30PM</option>
+                                        <option value="14:00">2:00PM</option>
+                                        <option value="14:30">2:30PM</option>
+                                        <option value="15:00">3:00PM</option>
+                                        <option value="15:30">3:30PM</option>
+                                        <option value="16:00">4:00PM</option>
+                                        <option value="16:30">4:30PM</option>
+                                        <option value="17:00">5:00PM</option>
+                                        <option value="17:30">5:30PM</option>
+                                    </select>
+                                </div>
+
+
+                            </div>
+
+                            <div style="margin: 2%">
+                                <button class="btn btn-primary" form="new_section"
+                                        onclick="document.new_section.submit()" style="font-size: 200%"
+                                        type="button" value="Submit New Section">Submit
+                                    New Section
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row" id="sections_table">
+        <div class="col-md-9">
+            <h2>Sections:</h2>
+            <table class="table table-bordered" id="sections">
+                <tr>
+                    <th>Section ID</th>
+                    <th>Subject</th>
+                    <th>Schedule</th>
+                    <th>Room</th>
+                </tr>
+                <tr th:each="section : ${sections}">
+                    <td th:text="${section.sectionId}">XYZ</td>
+                    <td th:text="${section.subject}">aaa</td>
+                    <td th:text="${section.schedule}">bbb</td>
+                    <td th:text="${section.room}">ccc</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Start Footer -->
+<script crossorigin="anonymous"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+<!-- End Footer -->

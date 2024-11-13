@@ -1,0 +1,87 @@
+import java.util.Properties
+
+plugins {
+    id 'java'
+    id 'groovy'
+    id("org.springframework.boot") version "3.3.0"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.unbroken-dome.test-sets") version "4.1.0"
+    id("org.liquibase.gradle") version "2.2.2"
+}
+
+group = "com.orangeandbronze.enlistment"
+version = "0.0.1-SNAPSHOT"
+var testcontainersVersion = '1.20.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+testSets {
+    integrationTest
+}
+
+dependencies {
+    implementation("org.apache.commons:commons-collections4:4.4")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("org.springframework.retry:spring-retry")
+    implementation("org.springframework:spring-aspects")
+
+    implementation("org.apache.commons:commons-lang3")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
+    testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
+    testImplementation("org.testcontainers:localstack:$testcontainersVersion")
+    testImplementation("org.testcontainers:junit-jupiter:$testcontainersVersion")
+    runtimeOnly("org.springframework.boot:spring-boot-devtools")
+    runtimeOnly("org.postgresql:postgresql")
+    integrationTestImplementation sourceSets.test.output
+
+    liquibaseRuntime('org.liquibase:liquibase-core:4.27.0')
+    liquibaseRuntime('info.picocli:picocli:4.7.6')
+    liquibaseRuntime('org.liquibase:liquibase-groovy-dsl:3.0.3')
+    liquibaseRuntime('org.liquibase.ext:liquibase-hibernate6:4.28.0')
+    liquibaseRuntime sourceSets.main.output
+    liquibaseRuntime sourceSets.main.runtimeClasspath
+    implementation('net.lbruun.springboot:preliquibase-spring-boot-starter:1.5.0')
+
+    testImplementation("org.spockframework:spock-core:2.4-M4-groovy-4.0")
+}
+
+def prop = new Properties()
+file('src/main/resources/application.properties').withInputStream {
+    prop.load(it)
+}
+
+configurations {
+    compileOnly {
+        extendsFrom(configurations.annotationProcessor)
+    }
+    liquibaseRuntime.extendsFrom(configurations.runtimeClasspath)
+}
+
+liquibase {
+    activities {
+        main {
+            changelogFile 'src/main/resources/db/changelog/db.changelog-master.sql'
+            url  prop.getProperty('spring.datasource.url')
+            username prop.getProperty('spring.datasource.username')
+            password prop.getProperty('spring.datasource.password')
+            driver 'org.postgresql.Driver'
+            referenceUrl  'hibernate:spring:com.orangeandbronze.enlistment.domain?dialect=org.hibernate.dialect.PostgreSQLDialect&hibernate.physical_naming_strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy'
+        }
+    }
+    runList = "main"
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}
