@@ -24,12 +24,16 @@ class SectionsControllerTest {
     @Mock
     private AdminRepository adminRepo;
 
+    @Mock
+
+    private FacultyRepository facultyRepo;
+
     private SectionsController sectionsController;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
-        sectionsController = new SectionsController(subjectRepo, adminRepo, roomRepo, sectionRepo);
+        sectionsController = new SectionsController(subjectRepo, adminRepo, roomRepo, sectionRepo, facultyRepo);
     }
 
     @Test
@@ -46,10 +50,12 @@ class SectionsControllerTest {
 
         Room room = mock(Room.class);
         Subject subject = mock(Subject.class);
+        Faculty faculty = mock(Faculty.class);
 
 
         when(roomRepo.findById(roomId)).thenReturn(Optional.of(room));
         when(subjectRepo.findById(subjectId)).thenReturn(Optional.of(subject));
+        when(facultyRepo.findById(facultyID)).thenReturn(Optional.of(faculty));
 
 
         RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();

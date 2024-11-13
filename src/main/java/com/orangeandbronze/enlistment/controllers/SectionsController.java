@@ -30,12 +30,13 @@ class SectionsController {
     private FacultyRepository facultyRepo;
 
 
-    public SectionsController(SubjectRepository subjectRepo, AdminRepository adminRepo, RoomRepository roomRepo, SectionRepository sectionRepo) {
+    public SectionsController(SubjectRepository subjectRepo, AdminRepository adminRepo, RoomRepository roomRepo, SectionRepository sectionRepo, FacultyRepository facultyRepo) {
         // no null check for easier testing
         this.subjectRepo = subjectRepo;
         this.adminRepo = adminRepo;
         this.roomRepo = roomRepo;
         this.sectionRepo = sectionRepo;
+        this.facultyRepo = facultyRepo;
     }
 
     @ModelAttribute("admin")
